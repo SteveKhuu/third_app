@@ -50,6 +50,9 @@ describe "UserPages" do
           expect { click_link('delete') }.to change(User, :count).by(-1)
         end
         it { should_not have_link('delete', href: user_path(admin)) }
+          
+        it { expect { delete user_path(admin) }.not_to change(User, :count) }
+        
       end
     end
   end
@@ -93,7 +96,7 @@ describe "UserPages" do
         fill_in "Name",         with: "Example User"
         fill_in "Email",        with: "user@example.com"
         fill_in "Password",     with: "foobar"
-        fill_in "Confirmation", with: "foobar"
+        fill_in "Confirm Password", with: "foobar"
       end
 
       it "should create a user" do
@@ -107,11 +110,17 @@ describe "UserPages" do
         it { should have_selector('title', text: user.name) }
         it { should have_selector('div.alert.alert-success', text: 'Welcome') }
         it { should have_link('Sign out') }
-          
+        it { should have_link('Profile') }
+        it { should have_link('Settings') }
+
         describe "followed by signout" do
           before { click_link "Sign out" }
           it { should have_link('Sign in') }
+          it { should_not have_link('Profile') }
+          it { should_not have_link('Settings') }
+
         end
+        
       end
       
       
@@ -124,7 +133,7 @@ describe "UserPages" do
       sign_in user
       visit edit_user_path(user)
     end
-
+    
     describe "page" do
       it { should have_selector('h1',    text: "Update your profile") }
       it { should have_selector('title', text: "Edit user") }

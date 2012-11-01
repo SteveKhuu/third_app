@@ -44,6 +44,10 @@ describe User do
     it { should be_admin }
   end
   
+  describe "admin attribute" do
+    it {should_not be_accessible :admin}
+  end
+  
   describe "when name is not present" do
     before { @user.name = " " }
     it { should_not be_valid }
