@@ -20,7 +20,10 @@ describe "Static pages" do
         sign_in user
         visit root_path
       end
-
+      
+      it { should have_content(user.microposts.count) }
+      it { should have_selector('aside section span:last-child', text: 'microposts') }
+      
       it "should render the user's feed" do
         user.feed.each do |item|
           page.should have_selector("li##{item.id}", text: item.content)
